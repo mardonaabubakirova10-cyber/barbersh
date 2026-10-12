@@ -22,7 +22,8 @@ export const ContactStep: React.FC<ContactStepProps> = ({
   onBack,
   onNext,
 }) => {
-  const isPhoneValid = clientPhone.replace(/\D/g, '').length >= 10;
+  const digits = clientPhone.replace(/\D/g, '');
+  const isPhoneValid = digits.length >= 7;
   const isNameValid = clientName.trim().length >= 2;
   const canProceed = isNameValid && isPhoneValid;
 
@@ -75,10 +76,15 @@ export const ContactStep: React.FC<ContactStepProps> = ({
           <input
             type="tel"
             className="input-field"
-            placeholder="+7 (999) 000-00-00"
+            placeholder="+998 90 123-45-67 или 969696396"
             value={clientPhone}
             onChange={(e) => onChangePhone(e.target.value)}
           />
+          {clientPhone.length > 0 && !isPhoneValid && (
+            <div style={{ fontSize: '0.75rem', color: 'var(--color-danger)', marginTop: '4px' }}>
+              Номер должен содержать минимум 7 цифр
+            </div>
+          )}
         </div>
 
         <div className="input-group">
