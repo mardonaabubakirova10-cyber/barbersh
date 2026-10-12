@@ -1,0 +1,25 @@
+{
+  "name": "barbershop-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm --workspace=apps/web run dev",
+    "dev:web": "npm --workspace=apps/web run dev",
+    "dev:api": "npm --workspace=@barbershop/api run dev",
+    "dev:miniapp": "npm --workspace=@barbershop/miniapp run dev",
+    "build": "npm --workspace=apps/web run build",
+    "build:web": "npm --workspace=apps/web run build",
+    "build:miniapp": "npm --workspace=@barbershop/miniapp run build",
+    "start": "npm --workspace=apps/web run start",
+    "start:web": "npm --workspace=apps/web run start",
+    "start:api": "npm --workspace=@barbershop/api run start",
+    "db:push": "npm --workspace=@barbershop/db run db:push",
+    "db:seed": "npm --workspace=@barbershop/db run db:seed",
+    "db:studio": "npm --workspace=@barbershop/db run studio",
+    "db:generate": "npm --workspace=@barbershop/db run generate"
+  }
+}

@@ -1,0 +1,132 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 24px 0;
+  background: transparent;
+  transition: var(--transition-smooth);
+}
+
+.scrolled {
+  padding: 14px 0;
+  background: rgba(5, 5, 5, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid #332D24;
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #E8E0D0;
+}
+
+.brandIconWrap {
+  color: var(--color-gold);
+}
+
+.brandName {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.navLink {
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--fg-secondary);
+  text-decoration: none;
+  letter-spacing: 0.14em;
+  transition: var(--transition-smooth);
+}
+
+.navLink:hover {
+  color: var(--color-gold);
+}
+
+.activeLink {
+  color: var(--color-gold);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.phoneText {
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  color: #E8E0D0;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.phoneText:hover {
+  color: var(--color-gold);
+}
+
+.menuToggle {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--border-dark);
+  padding: 6px;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.mobileOverlay {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #050505;
+  border-bottom: 1px solid #332D24;
+  padding: 24px;
+}
+
+.mobileNav {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mobileLink {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #E8E0D0;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  padding: 8px 0;
+  border-bottom: 1px solid #332D24;
+}
+
+@media (max-width: 960px) {
+  .nav, .phoneText {
+    display: none;
+  }
+  .menuToggle {
+    display: flex;
+  }
+}

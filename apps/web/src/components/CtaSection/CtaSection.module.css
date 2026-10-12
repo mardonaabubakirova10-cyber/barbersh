@@ -1,0 +1,76 @@
+.ctaSection {
+  position: relative;
+  background: var(--bg-dark);
+  color: var(--fg-main);
+  padding: 130px 0;
+  border-top: 1px solid var(--border-editorial);
+  overflow: hidden;
+}
+
+.ctaBackground {
+  position: absolute;
+  inset: 0;
+  background-image: url('/photo_5_2026-10-05_17-32-35.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: contrast(1.1) brightness(0.35);
+  z-index: 0;
+}
+
+.ctaGradientOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, rgba(5, 5, 5, 0.7) 0%, rgba(5, 5, 5, 0.95) 100%),
+    linear-gradient(to bottom, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0.75) 50%, rgba(5, 5, 5, 0.95) 100%);
+}
+
+.ctaSection::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(201, 164, 92, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.ctaInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.ctaTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(2.6rem, 7vw, 5.5rem);
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  margin-top: 16px;
+  margin-bottom: 22px;
+  color: #E8E0D0;
+  text-transform: uppercase;
+}
+
+.ctaSub {
+  font-size: 1rem;
+  color: var(--fg-on-dark-muted);
+  margin-bottom: 40px;
+  line-height: 1.65;
+  max-width: 480px;
+}
+
+.ctaButtons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+

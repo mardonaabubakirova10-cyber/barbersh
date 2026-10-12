@@ -1,0 +1,225 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Barber {
+  id              String          @id @default(cuid())
+  name            String
+  role            String          @default("Барбер")
+  photoUrl        String?         @map("photo_url")
+  bio             String?
+  experienceYears Int             @default(1) @map("experience_years")
+  telegramChatId  String?         @map("telegram_chat_id")
+  isActive        Boolean         @default(true) @map("is_active")
+  sortOrder       Int             @default(0) @map("sort_order")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  services        BarberService[]
+  workingHours    WorkingHours[]
+  breaks          Break[]
+  timeOffs        TimeOff[]
+  bookings        Booking[]
+  reviews         Review[]
+  portfolio       PortfolioItem[]
+
+  @@map("barbers")
+}
+
+model PortfolioItem {
+  id        String   @id @default(cuid())
+  barberId  String   @map("barber_id")
+  imageUrl  String   @map("image_url")
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  barber    Barber   @relation(fields: [barberId], references: [id], onDelete: Cascade)
+
+  @@map("portfolio_items")
+}
+
+model Service {
+  id          String          @id @default(cuid())
+  name        String
+  category    String          @default("Стрижки")
+  description String?
+  durationMin Int             @map("duration_min")
+  price       Int
+  isActive    Boolean         @default(true) @map("is_active")
+  sortOrder   Int             @default(0) @map("sort_order")
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+
+  barbers     BarberService[]
+
+  @@map("services")
+}
+
+model BarberService {
+  barberId    String   @map("barber_id")
+  serviceId   String   @map("service_id")
+  durationMin Int?     @map("duration_min")
+  price       Int?
+  isEnabled   Boolean  @default(true) @map("is_enabled")
+
+  barber      Barber   @relation(fields: [barberId], references: [id], onDelete: Cascade)
+  service     Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@id([barberId, serviceId])
+  @@map("barber_services")
+}
+
+model WorkingHours {
+  id        String  @id @default(cuid())
+  barberId  String  @map("barber_id")
+  weekday   Int     // 0 = Sunday, 1 = Monday, ... 6 = Saturday
+  startTime String  @map("start_time") // "10:00"
+  endTime   String  @map("end_time")   // "21:00"
+
+  barber    Barber  @relation(fields: [barberId], references: [id], onDelete: Cascade)
+
+  @@unique([barberId, weekday])
+  @@map("working_hours")
+}
+
+model Break {
+  id        String  @id @default(cuid())
+  barberId  String  @map("barber_id")
+  weekday   Int
+  startTime String  @map("start_time") // "13:00"
+  endTime   String  @map("end_time")   // "14:00"
+
+  barber    Barber  @relation(fields: [barberId], references: [id], onDelete: Cascade)
+
+  @@map("breaks")
+}
+
+enum TimeOffType {
+  VACATION
+  SICK_LEAVE
+  DAY_OFF
+  SALON_CLOSED
+}
+
+model TimeOff {
+  id        String      @id @default(cuid())
+  barberId  String?     @map("barber_id")
+  startsAt  DateTime    @map("starts_at")
+  endsAt    DateTime    @map("ends_at")
+  type      TimeOffType @default(DAY_OFF)
+  note      String?
+
+  barber    Barber?     @relation(fields: [barberId], references: [id], onDelete: Cascade)
+
+  @@map("time_off")
+}
+
+model Client {
+  id             String    @id @default(cuid())
+  name           String
+  phone          String    @unique
+  telegramId     String?   @unique @map("telegram_id")
+  telegramChatId String?   @map("telegram_chat_id")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  bookings       Booking[]
+  reviews        Review[]
+
+  @@map("clients")
+}
+
+enum BookingStatus {
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum BookingSource {
+  WEB
+  TELEGRAM
+  ADMIN
+}
+
+model Booking {
+  id                 String           @id @default(cuid())
+  clientId           String           @map("client_id")
+  barberId           String           @map("barber_id")
+  startsAt           DateTime         @map("starts_at")
+  endsAt             DateTime         @map("ends_at")
+  totalPrice         Int              @map("total_price")
+  totalDurationMin   Int              @map("total_duration_min")
+  status             BookingStatus    @default(CONFIRMED)
+  source             BookingSource    @default(WEB)
+  manageToken        String           @unique @default(cuid()) @map("manage_token")
+  createdAt          DateTime         @default(now()) @map("created_at")
+  updatedAt          DateTime         @updatedAt @map("updated_at")
+
+  reminderDaySentAt  DateTime?        @map("reminder_day_sent_at")
+  reminder30mSentAt  DateTime?        @map("reminder_30m_sent_at")
+  reviewRequestedAt  DateTime?        @map("review_requested_at")
+  autoCompletedAt    DateTime?        @map("auto_completed_at")
+
+  client             Client           @relation(fields: [clientId], references: [id])
+  barber             Barber           @relation(fields: [barberId], references: [id])
+  services           BookingService[]
+  review             Review?
+
+  @@index([barberId, startsAt])
+  @@map("bookings")
+}
+
+model BookingService {
+  id          String   @id @default(cuid())
+  bookingId   String   @map("booking_id")
+  serviceId   String   @map("service_id")
+  name        String
+  durationMin Int      @map("duration_min")
+  price       Int
+
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@map("booking_services")
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  bookingId String   @unique @map("booking_id")
+  barberId  String   @map("barber_id")
+  clientId  String   @map("client_id")
+  rating    Int      @default(5)
+  comment   String?
+  isPublic  Boolean  @default(true) @map("is_public")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  barber    Barber   @relation(fields: [barberId], references: [id], onDelete: Cascade)
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
+}
+
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String   @map("password_hash")
+  role         String   @default("ADMIN")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("admin_users")
+}

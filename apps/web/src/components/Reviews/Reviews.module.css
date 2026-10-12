@@ -1,0 +1,94 @@
+.reviewsSection {
+  position: relative;
+  background: #050505;
+  border-top: 1px solid #332D24;
+  overflow: hidden;
+}
+
+.reviewsBackground {
+  position: absolute;
+  inset: 0;
+  background-image: url('/photo_4_2026-10-05_17-32-35.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: contrast(1.15) brightness(0.65);
+  z-index: 0;
+}
+
+.reviewsGradientOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, rgba(5, 5, 5, 0.45) 0%, rgba(5, 5, 5, 0.85) 100%),
+    linear-gradient(to bottom, rgba(5, 5, 5, 0.75) 0%, rgba(5, 5, 5, 0.45) 50%, rgba(5, 5, 5, 0.85) 100%);
+}
+
+.sectionHeader {
+  margin-bottom: 50px;
+}
+
+.reviewsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+}
+
+.reviewCard {
+  background: rgba(11, 11, 11, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(51, 45, 36, 0.8);
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: var(--transition-smooth);
+}
+
+.reviewCard:hover {
+  border-color: var(--border-gold);
+  background: rgba(18, 18, 18, 0.85);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+.quoteIconBox {
+  margin-bottom: 20px;
+}
+
+.reviewText {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: #E8E0D0;
+  font-style: italic;
+  margin-bottom: 28px;
+  flex-grow: 1;
+}
+
+.reviewAuthor {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 18px;
+  border-top: 1px solid #332D24;
+}
+
+.reviewAuthor strong {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--color-gold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.reviewAuthor span {
+  font-size: 0.8rem;
+  color: var(--fg-secondary);
+}
+
+@media (max-width: 768px) {
+  .reviewsGrid {
+    grid-template-columns: 1fr;
+  }
+}

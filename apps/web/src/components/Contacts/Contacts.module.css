@@ -1,0 +1,94 @@
+.contactsSection {
+  position: relative;
+  background: var(--bg-dark);
+  border-top: 1px solid var(--border-dark);
+  overflow: hidden;
+}
+
+.contactsBackground {
+  position: absolute;
+  inset: 0;
+  background-image: url('/photo_5_2026-10-05_17-32-35.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: contrast(1.15) brightness(0.65);
+  z-index: 0;
+}
+
+.contactsGradientOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, rgba(5, 5, 5, 0.85) 0%, rgba(5, 5, 5, 0.45) 50%, rgba(5, 5, 5, 0.8) 100%),
+    linear-gradient(to bottom, rgba(5, 5, 5, 0.6) 0%, transparent 40%, rgba(5, 5, 5, 0.9) 100%);
+}
+
+.contactsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.itemRow {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.itemRow strong {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--color-gold);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.itemRow p {
+  color: #E8E0D0;
+  font-size: 0.95rem;
+}
+
+.phoneLink {
+  color: #E8E0D0;
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+}
+
+.phoneLink:hover {
+  color: var(--color-gold);
+}
+
+.buttonGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 36px;
+}
+
+.mapCol {
+  position: relative;
+  min-height: 420px;
+  border: 1px solid var(--border-dark);
+  overflow: hidden;
+}
+
+.mapFrame {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  border: none;
+  filter: grayscale(100%) contrast(1.2) brightness(0.85);
+}
+
+@media (max-width: 960px) {
+  .contactsGrid {
+    grid-template-columns: 1fr;
+  }
+}
