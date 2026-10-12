@@ -21,6 +21,9 @@
     "db:seed": "npm --workspace=@barbershop/db run db:seed",
     "db:studio": "npm --workspace=@barbershop/db run studio",
     "db:generate": "npm --workspace=@barbershop/db run generate",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate --schema=packages/db/prisma/schema.prisma"
+  },
+  "prisma": {
+    "schema": "packages/db/prisma/schema.prisma"
   }
 }
