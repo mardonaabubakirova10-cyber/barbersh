@@ -20,6 +20,7 @@
     "db:push": "npm --workspace=@barbershop/db run db:push",
     "db:seed": "npm --workspace=@barbershop/db run db:seed",
     "db:studio": "npm --workspace=@barbershop/db run studio",
-    "db:generate": "npm --workspace=@barbershop/db run generate"
+    "db:generate": "npm --workspace=@barbershop/db run generate",
+    "postinstall": "prisma generate"
   }
 }

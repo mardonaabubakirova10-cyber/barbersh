@@ -1,23 +1,28 @@
 import { Service, Barber, Booking } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+const apiOrigin = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/+$/, '') : '';
 
-export async function fetchServices(): Promise<Service[]> {
-  const res = await fetch(`${API_BASE_URL}/api/v1/services`);
+export async function request<T = any>(path: string, options?: RequestInit): Promise<T> {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  const url = apiOrigin ? `${apiOrigin}${normalizedPath}` : normalizedPath;
+  const res = await fetch(url, options);
   const json = await res.json();
   if (!res.ok || !json.success) {
-    throw new Error(json.error || 'Failed to fetch services');
+    const error: any = new Error(json.error || 'Request failed');
+    if (json.code) {
+      error.code = json.code;
+    }
+    throw error;
   }
   return json.data;
 }
 
+export async function fetchServices(): Promise<Service[]> {
+  return request<Service[]>('/api/v1/services');
+}
+
 export async function fetchBarbers(): Promise<Barber[]> {
-  const res = await fetch(`${API_BASE_URL}/api/v1/barbers`);
-  const json = await res.json();
-  if (!res.ok || !json.success) {
-    throw new Error(json.error || 'Failed to fetch barbers');
-  }
-  return json.data;
+  return request<Barber[]>('/api/v1/barbers');
 }
 
 export async function fetchAvailability(params: {
@@ -31,12 +36,9 @@ export async function fetchAvailability(params: {
     ...(params.barberId ? { barberId: params.barberId } : {}),
   });
 
-  const res = await fetch(`${API_BASE_URL}/api/v1/availability?${query.toString()}`);
-  const json = await res.json();
-  if (!res.ok || !json.success) {
-    throw new Error(json.error || 'Failed to fetch availability');
-  }
-  return json.data;
+  return request<{ slots: string[]; slotMap?: Record<string, string[]> }>(
+    `/api/v1/availability?${query.toString()}`
+  );
 }
 
 export async function fetchAvailableDays(params: {
@@ -52,12 +54,9 @@ export async function fetchAvailableDays(params: {
     ...(params.barberId ? { barberId: params.barberId } : {}),
   });
 
-  const res = await fetch(`${API_BASE_URL}/api/v1/availability/days?${query.toString()}`);
-  const json = await res.json();
-  if (!res.ok || !json.success) {
-    throw new Error(json.error || 'Failed to fetch available days');
-  }
-  return json.data;
+  return request<Array<{ date: string; hasSlots: boolean }>>(
+    `/api/v1/availability/days?${query.toString()}`
+  );
 }
 
 export interface CreateBookingPayload {
@@ -73,7 +72,7 @@ export interface CreateBookingPayload {
 }
 
 export async function createBooking(payload: CreateBookingPayload): Promise<Booking> {
-  const res = await fetch(`${API_BASE_URL}/api/v1/bookings`, {
+  return request<Booking>('/api/v1/bookings', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -81,49 +80,24 @@ export async function createBooking(payload: CreateBookingPayload): Promise<Book
       source: 'TELEGRAM',
     }),
   });
-
-  const json = await res.json();
-  if (!res.ok || !json.success) {
-    const error: any = new Error(json.error || 'Failed to create booking');
-    error.code = json.code;
-    throw error;
-  }
-  return json.data;
 }
 
 export async function fetchBooking(token: string): Promise<Booking> {
-  const res = await fetch(`${API_BASE_URL}/api/v1/bookings/${token}`);
-  const json = await res.json();
-  if (!res.ok || !json.success) {
-    throw new Error(json.error || 'Failed to fetch booking');
-  }
-  return json.data;
+  return request<Booking>(`/api/v1/bookings/${token}`);
 }
 
 export async function cancelBooking(token: string): Promise<Booking> {
-  const res = await fetch(`${API_BASE_URL}/api/v1/bookings/${token}/cancel`, {
+  return request<Booking>(`/api/v1/bookings/${token}/cancel`, {
     method: 'POST',
   });
-  const json = await res.json();
-  if (!res.ok || !json.success) {
-    throw new Error(json.error || 'Failed to cancel booking');
-  }
-  return json.data;
 }
 
 export async function rescheduleBooking(token: string, payload: { date: string; time: string; barberId?: string }): Promise<Booking> {
-  const res = await fetch(`${API_BASE_URL}/api/v1/bookings/${token}/reschedule`, {
+  return request<Booking>(`/api/v1/bookings/${token}/reschedule`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
-  const json = await res.json();
-  if (!res.ok || !json.success) {
-    const error: any = new Error(json.error || 'Failed to reschedule booking');
-    error.code = json.code;
-    throw error;
-  }
-  return json.data;
 }
 
 export async function fetchTelegramBookings(params: { telegramId?: string; phone?: string }): Promise<Booking[]> {
@@ -131,10 +105,7 @@ export async function fetchTelegramBookings(params: { telegramId?: string; phone
   if (params.telegramId) query.set('telegramId', params.telegramId);
   if (params.phone) query.set('phone', params.phone);
 
-  const res = await fetch(`${API_BASE_URL}/api/v1/telegram/bookings?${query.toString()}`);
-  const json = await res.json();
-  if (!res.ok || !json.success) {
-    throw new Error(json.error || 'Failed to fetch telegram bookings');
-  }
-  return json.data || [];
+  const data = await request<Booking[]>(`/api/v1/telegram/bookings?${query.toString()}`);
+  return data || [];
 }
+
