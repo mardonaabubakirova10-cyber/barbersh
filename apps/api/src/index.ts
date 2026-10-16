@@ -49,6 +49,7 @@ async function main() {
 
   // 2. Health check (root + /health — браузер на localhost:4000 не должен видеть 404)
   const healthPayload = () => ({
+    ok: true,
     status: 'ok',
     service: 'barbershop-api',
     telegramBot: bot ? 'configured' : 'missing_token',
@@ -1115,13 +1116,27 @@ async function main() {
   const PORT = Number(process.env.PORT) || 4000;
   const HOST = process.env.HOST || '0.0.0.0';
 
-  try {
-    await ensureDefaultAdmin();
-    await fastify.listen({ port: PORT, host: HOST });
-    console.log(`🚀 Fastify Backend API running on http://localhost:${PORT}`);
+  // Ensure default admin exists without blocking app listening or crashing serverless invocations
+  ensureDefaultAdmin().catch((err) => {
+    fastify.log.error(err, 'Failed to ensure default admin user');
+  });
 
+  // Call app.listen() without top-level await to avoid blocking serverless lifecycle
+  fastify
+    .listen({ port: PORT, host: HOST })
+    .then(() => {
+      console.log(`🚀 Fastify Backend API running on http://localhost:${PORT}`);
+    })
+    .catch((err) => {
+      fastify.log.error(err);
+      process.exit(1);
+    });
+
+  // On Vercel, use Telegram webhook and cron endpoints rather than long polling and intervals
+  const isVercel = Boolean(process.env.VERCEL);
+  if (!isVercel) {
     if (bot) {
-      // Start bot polling in background for local development
+      // Start bot polling in background for local development only
       bot.start({
         onStart(botInfo) {
           console.log(`🤖 Telegram Bot started as @${botInfo.username}`);
@@ -1131,7 +1146,7 @@ async function main() {
       });
     }
 
-    // Run reminders cycle every 5 minutes in background
+    // Run reminders cycle periodically in background for local development only
     setInterval(async () => {
       try {
         await runRemindersCycle();
@@ -1139,10 +1154,9 @@ async function main() {
         fastify.log.error(err, 'Error in periodic reminders cycle');
       }
     }, 5 * 60 * 1000);
-  } catch (err) {
-    fastify.log.error(err);
-    process.exit(1);
   }
 }
 
 main();
+
+export default fastify;
