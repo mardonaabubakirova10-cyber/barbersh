@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Scissors, Lock, User, AlertCircle, Loader2 } from 'lucide-react';
 import { setAdminToken } from '@/lib/admin-api';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 export default function AdminLoginPage() {
   const router = useRouter();

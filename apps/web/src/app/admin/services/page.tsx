@@ -34,7 +34,7 @@ export default function AdminServicesPage() {
   const loadServices = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:4000/api/v1/services');
+      const res = await fetch('/api/v1/services');
       const json = await res.json();
       if (json.success) setServices(json.data);
     } catch (err) {

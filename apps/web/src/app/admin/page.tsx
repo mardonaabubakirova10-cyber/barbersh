@@ -81,8 +81,8 @@ export default function AdminBookingsPage() {
 
       const [bData, barbersRes, servicesRes] = await Promise.all([
         adminFetch<BookingItem[]>(`/api/v1/admin/bookings?${query.toString()}`),
-        fetch('http://localhost:4000/api/v1/barbers').then((r) => r.json()),
-        fetch('http://localhost:4000/api/v1/services').then((r) => r.json()),
+        fetch('/api/v1/barbers').then((r) => r.json()),
+        fetch('/api/v1/services').then((r) => r.json()),
       ]);
 
       setBookings(bData);

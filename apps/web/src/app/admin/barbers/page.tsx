@@ -47,7 +47,7 @@ export default function AdminBarbersPage() {
   const loadBarbers = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:4000/api/v1/barbers');
+      const res = await fetch('/api/v1/barbers');
       const json = await res.json();
       if (json.success) setBarbers(json.data);
     } catch (err) {
@@ -122,7 +122,7 @@ export default function AdminBarbersPage() {
     setPortfolioModalBarber(barber);
     setLoadingPortfolio(true);
     try {
-      const res = await fetch(`http://localhost:4000/api/v1/barbers/${barber.id}/portfolio`);
+      const res = await fetch(`/api/v1/barbers/${barber.id}/portfolio`);
       const json = await res.json();
       if (json.success) setPortfolioItems(json.data);
     } catch (err) {

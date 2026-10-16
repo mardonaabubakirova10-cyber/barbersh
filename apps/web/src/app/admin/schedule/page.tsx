@@ -46,7 +46,7 @@ export default function AdminSchedulePage() {
     async function load() {
       setLoading(true);
       try {
-        const res = await fetch('http://localhost:4000/api/v1/barbers');
+        const res = await fetch('/api/v1/barbers');
         const json = await res.json();
         if (json.success && json.data.length > 0) {
           setBarbers(json.data);
