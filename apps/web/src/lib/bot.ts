@@ -15,7 +15,8 @@ export function getBot(): Bot | null {
   }
 }
 
-export const bot = getBot();
+export const bot = null;
+
 
 
 function resolveClientChatId(client: { telegramChatId?: string | null; telegramId?: string | null }) {
@@ -39,9 +40,11 @@ function formatRuDateTime(date: Date) {
 }
 
 export async function sendBookingCreatedNotification(bookingId: string) {
-  if (!bot) return;
+  const activeBot = getBot();
+  if (!activeBot) return;
 
   try {
+
     const booking = await prisma.booking.findUnique({
       where: { id: bookingId },
       include: { client: true, barber: true, services: true },
@@ -68,7 +71,7 @@ export async function sendBookingCreatedNotification(bookingId: string) {
         '📱 Открыть Mini App'
       );
 
-      await bot.api.sendMessage(clientChatId, clientMsg, {
+      await activeBot.api.sendMessage(clientChatId, clientMsg, {
         parse_mode: 'Markdown',
         reply_markup: keyboard,
       });
@@ -83,17 +86,19 @@ export async function sendBookingCreatedNotification(bookingId: string) {
         `💰 *Стоимость:* ${booking.totalPrice} ₽\n\n` +
         `📋 *Услуги:*\n${servicesList}`;
 
-      await bot.api.sendMessage(booking.barber.telegramChatId, barberMsg, {
+      await activeBot.api.sendMessage(booking.barber.telegramChatId, barberMsg, {
         parse_mode: 'Markdown',
       });
     }
+
   } catch (err) {
     console.error('Failed to send booking created notification:', err);
   }
 }
 
 export async function sendBookingCancelledNotification(bookingId: string) {
-  if (!bot) return;
+  const activeBot = getBot();
+  if (!activeBot) return;
 
   try {
     const booking = await prisma.booking.findUnique({
@@ -113,7 +118,7 @@ export async function sendBookingCancelledNotification(bookingId: string) {
         `Вы можете выбрать другое удобное время в любой момент:`;
 
       const keyboard = addMiniAppButton(new InlineKeyboard(), '✂️ Записаться снова');
-      await bot.api.sendMessage(clientChatId, msg, { parse_mode: 'Markdown', reply_markup: keyboard });
+      await activeBot.api.sendMessage(clientChatId, msg, { parse_mode: 'Markdown', reply_markup: keyboard });
     }
 
     if (booking.barber.telegramChatId) {
@@ -121,15 +126,17 @@ export async function sendBookingCancelledNotification(bookingId: string) {
         `⚠️ *Отмена записи*\n\n` +
         `Клиент ${booking.client.name} отменил запись на *${dateTimeFormatted}*.\n` +
         `Слот освобожден в расписании.`;
-      await bot.api.sendMessage(booking.barber.telegramChatId, msg, { parse_mode: 'Markdown' });
+      await activeBot.api.sendMessage(booking.barber.telegramChatId, msg, { parse_mode: 'Markdown' });
     }
+
   } catch (err) {
     console.error('Failed to send booking cancelled notification:', err);
   }
 }
 
 export async function sendBookingRescheduledNotification(bookingId: string) {
-  if (!bot) return;
+  const activeBot = getBot();
+  if (!activeBot) return;
 
   try {
     const booking = await prisma.booking.findUnique({
@@ -153,7 +160,7 @@ export async function sendBookingRescheduledNotification(bookingId: string) {
         new InlineKeyboard().url('🌐 Управление записью', `${webUrl}/booking/${booking.manageToken}`).row(),
         '📱 Открыть Mini App'
       );
-      await bot.api.sendMessage(clientChatId, msg, { parse_mode: 'Markdown', reply_markup: keyboard });
+      await activeBot.api.sendMessage(clientChatId, msg, { parse_mode: 'Markdown', reply_markup: keyboard });
     }
 
     if (booking.barber.telegramChatId) {
@@ -161,9 +168,10 @@ export async function sendBookingRescheduledNotification(bookingId: string) {
         `🔄 *Перенос записи*\n\n` +
         `Клиент ${booking.client.name} перенес визит на *${dateTimeFormatted}*.\n` +
         `Длительность: ${booking.totalDurationMin} мин.`;
-      await bot.api.sendMessage(booking.barber.telegramChatId, msg, { parse_mode: 'Markdown' });
+      await activeBot.api.sendMessage(booking.barber.telegramChatId, msg, { parse_mode: 'Markdown' });
     }
   } catch (err) {
     console.error('Failed to send booking rescheduled notification:', err);
   }
 }
+

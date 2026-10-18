@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/slots';
-import { bot } from '@/lib/bot';
+import { getBot } from '@/lib/bot';
 import { InlineKeyboard } from 'grammy';
+
 
 const miniAppUrl = process.env.MINIAPP_URL || 'http://localhost:5173';
 const webUrl = process.env.WEB_URL || 'http://localhost:3000';
@@ -25,6 +26,7 @@ export interface ReminderRunResult {
 }
 
 export async function runRemindersCycle(): Promise<ReminderRunResult> {
+  const bot = getBot();
   const result: ReminderRunResult = {
     remindersDayCount: 0,
     reminders30mCount: 0,
@@ -34,6 +36,7 @@ export async function runRemindersCycle(): Promise<ReminderRunResult> {
   };
 
   const now = new Date();
+
 
   // 1. Day-before reminders
   try {
