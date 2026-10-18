@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma, getAvailableSlots } from '@/lib/slots';
 import { sendBookingRescheduledNotification } from '@/lib/bot';
