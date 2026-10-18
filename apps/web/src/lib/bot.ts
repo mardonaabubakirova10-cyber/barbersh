@@ -5,7 +5,18 @@ const token = process.env.TELEGRAM_BOT_TOKEN;
 const miniAppUrl = process.env.MINIAPP_URL || 'http://localhost:5173';
 const webUrl = process.env.WEB_URL || 'http://localhost:3000';
 
-export const bot = token && token !== 'MOCK_BOT_TOKEN' ? new Bot(token) : null;
+export function getBot(): Bot | null {
+  const t = process.env.TELEGRAM_BOT_TOKEN;
+  if (!t || t === 'MOCK_BOT_TOKEN') return null;
+  try {
+    return new Bot(t);
+  } catch {
+    return null;
+  }
+}
+
+export const bot = getBot();
+
 
 function resolveClientChatId(client: { telegramChatId?: string | null; telegramId?: string | null }) {
   return client.telegramChatId || client.telegramId || null;

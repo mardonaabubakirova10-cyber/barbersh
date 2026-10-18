@@ -1,16 +1,19 @@
 import { NextResponse } from 'next/server';
-import { bot } from '@/lib/bot';
+import { getBot } from '@/lib/bot';
+
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 
 export async function GET() {
+  const telegramBot = getBot() ? 'configured' : 'missing_token';
   return NextResponse.json({
     ok: true,
     status: 'ok',
     service: 'barbershop-api',
-    telegramBot: bot ? 'configured' : 'missing_token',
+    telegramBot,
     timestamp: new Date().toISOString(),
   });
 }
+
