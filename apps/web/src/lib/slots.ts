@@ -1,6 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@barbershop/db';
 
-const prisma = new PrismaClient();
 
 /** Converts "HH:MM" to minutes from midnight */
 function timeToMin(t: string): number {
