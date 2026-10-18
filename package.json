@@ -18,8 +18,8 @@
     "dev:web": "npm --workspace=apps/web run dev",
     "dev:api": "npm --workspace=@barbershop/api run dev",
     "dev:miniapp": "npm --workspace=@barbershop/miniapp run dev",
-    "build": "npm --workspace=apps/web run build",
-    "build:web": "npm --workspace=apps/web run build",
+    "build": "npx prisma generate --schema=packages/db/prisma/schema.prisma && npm --workspace=apps/web run build",
+    "build:web": "npx prisma generate --schema=packages/db/prisma/schema.prisma && npm --workspace=apps/web run build",
     "build:miniapp": "npm --workspace=@barbershop/miniapp run build",
     "start": "npm --workspace=apps/web run start",
     "start:web": "npm --workspace=apps/web run start",
@@ -27,8 +27,7 @@
     "db:push": "npm --workspace=@barbershop/db run db:push",
     "db:seed": "npm --workspace=@barbershop/db run db:seed",
     "db:studio": "npm --workspace=@barbershop/db run studio",
-    "db:generate": "npm --workspace=@barbershop/db run generate",
-    "postinstall": "npx prisma generate --schema=packages/db/prisma/schema.prisma"
+    "db:generate": "npm --workspace=@barbershop/db run generate"
   },
   "prisma": {
     "schema": "packages/db/prisma/schema.prisma"
