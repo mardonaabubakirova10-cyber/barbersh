@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { bot } from '@/lib/bot';
+import { getBot } from '@/lib/bot';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
+  const bot = getBot();
   if (!bot) {
+
     return NextResponse.json(
       { success: false, error: 'Telegram Bot is not configured' },
       { status: 400 }
