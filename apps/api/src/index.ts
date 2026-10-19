@@ -27,17 +27,20 @@ import {
   getAnalyticsSummary,
 } from './admin';
 
+const isVercel = Boolean(process.env.VERCEL);
 const fastify = Fastify({
-  logger: {
-    transport: {
-      target: 'pino-pretty',
-      options: {
-        colorize: true,
-        translateTime: 'HH:MM:ss Z',
-        ignore: 'pid,hostname',
+  logger: isVercel
+    ? true
+    : {
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            colorize: true,
+            translateTime: 'HH:MM:ss Z',
+            ignore: 'pid,hostname',
+          },
+        },
       },
-    },
-  },
 });
 
 async function main() {
@@ -1122,7 +1125,6 @@ async function main() {
   });
 
   // On Vercel, serverless handler routes requests into fastify; listen() is for standalone/local dev only
-  const isVercel = Boolean(process.env.VERCEL);
   if (!isVercel) {
     fastify
       .listen({ port: PORT, host: HOST })
@@ -1156,6 +1158,7 @@ async function main() {
   }
 }
 
-main();
+export const initPromise = main();
 
 export default fastify;
+
