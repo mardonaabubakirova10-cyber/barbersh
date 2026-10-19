@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { prisma } from '@barbershop/db';
+import { prisma } from './db';
 
 /**
  * Hash password with PBKDF2

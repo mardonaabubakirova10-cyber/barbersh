@@ -1,4 +1,4 @@
-import { prisma } from '@barbershop/db';
+import { prisma } from './db';
 import { bot } from './bot';
 import { InlineKeyboard } from 'grammy';
 

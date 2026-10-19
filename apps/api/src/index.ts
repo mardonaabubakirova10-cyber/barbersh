@@ -7,7 +7,7 @@ import path from 'path';
 dotenv.config({ path: path.resolve(__dirname, '../../../packages/db/.env') });
 dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
-import { prisma } from '@barbershop/db';
+import { prisma } from './db';
 import { getAvailableSlots, getAvailableDays } from './slots';
 import { validateTelegramInitData } from './telegram';
 import {

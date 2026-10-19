@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import path from 'path';
 import { Bot, InlineKeyboard, webhookCallback } from 'grammy';
-import { prisma } from '@barbershop/db';
+import { prisma } from './db';
 
 // tsx hoists imports, so env must load here — otherwise bot starts without token
 dotenv.config({ path: path.resolve(__dirname, '../../../packages/db/.env') });
