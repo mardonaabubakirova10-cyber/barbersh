@@ -131,15 +131,11 @@ export function useTelegram(): TelegramState {
         }
       } catch (e) {}
 
-      // Apply CSS variables from Telegram themeParams
+      // Keep dark luxury barber palette intact, only sync accent colors if needed
       try {
         const root = document.documentElement;
-        if (tg.themeParams) {
+        if (tg.themeParams && tg.colorScheme === 'dark') {
           if (tg.themeParams.bg_color) root.style.setProperty('--tg-theme-bg-color', tg.themeParams.bg_color);
-          if (tg.themeParams.text_color) root.style.setProperty('--tg-theme-text-color', tg.themeParams.text_color);
-          if (tg.themeParams.hint_color) root.style.setProperty('--tg-theme-hint-color', tg.themeParams.hint_color);
-          if (tg.themeParams.button_color) root.style.setProperty('--tg-theme-button-color', tg.themeParams.button_color);
-          if (tg.themeParams.button_text_color) root.style.setProperty('--tg-theme-button-text-color', tg.themeParams.button_text_color);
           if (tg.themeParams.secondary_bg_color) root.style.setProperty('--tg-theme-secondary-bg-color', tg.themeParams.secondary_bg_color);
         }
       } catch (e) {}
