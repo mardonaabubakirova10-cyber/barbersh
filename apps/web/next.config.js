@@ -9,6 +9,7 @@ const nextConfig = {
       },
     ],
   },
+  transpilePackages: ['@barbershop/db', '@barbershop/shared'],
 };
 
 module.exports = nextConfig;
