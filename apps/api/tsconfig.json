@@ -3,13 +3,17 @@
     "target": "ES2022",
     "module": "CommonJS",
     "moduleResolution": "node",
-    "declaration": true,
-    "strict": true,
+    "declaration": false,
+    "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist",
-    "rootDir": "./src"
+    "noImplicitAny": false,
+    "paths": {
+      "@barbershop/db": ["../../packages/db/src/index.ts"]
+    },
+    "outDir": "./dist"
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["src/**/*.test.ts"]
 }

@@ -1121,20 +1121,19 @@ async function main() {
     fastify.log.error(err, 'Failed to ensure default admin user');
   });
 
-  // Call app.listen() without top-level await to avoid blocking serverless lifecycle
-  fastify
-    .listen({ port: PORT, host: HOST })
-    .then(() => {
-      console.log(`🚀 Fastify Backend API running on http://localhost:${PORT}`);
-    })
-    .catch((err) => {
-      fastify.log.error(err);
-      process.exit(1);
-    });
-
-  // On Vercel, use Telegram webhook and cron endpoints rather than long polling and intervals
+  // On Vercel, serverless handler routes requests into fastify; listen() is for standalone/local dev only
   const isVercel = Boolean(process.env.VERCEL);
   if (!isVercel) {
+    fastify
+      .listen({ port: PORT, host: HOST })
+      .then(() => {
+        console.log(`🚀 Fastify Backend API running on http://localhost:${PORT}`);
+      })
+      .catch((err) => {
+        fastify.log.error(err);
+        process.exit(1);
+      });
+
     if (bot) {
       // Start bot polling in background for local development only
       bot.start({
